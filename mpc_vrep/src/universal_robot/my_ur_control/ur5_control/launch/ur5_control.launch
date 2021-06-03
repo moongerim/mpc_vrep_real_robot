@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="limited" default="false"/>
+  <arg name="paused" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" default="worlds/empty.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+  </include>
+
+
+  <!-- send robot urdf to param server -->
+  <include file="$(find ur_description)/launch/ur5_upload_control.launch">
+    <arg name="limited" value="$(arg limited)"/> 
+  </include>
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-urdf -model ur5 -param robot_description  -Y 3.14 " respawn="false" output="screen" /> 
+  <node name="sdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-file '/home/robot/model_editor_models/ref_box/model.sdf' -sdf -model ref_box -z 0.3 -y 0.4 -x -0.2 " respawn="false" output="screen" /> 
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <!--<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+	args="-urdf -model ur5 -param robot_description"/>-->
+
+  <!-- joint_state_controller -->
+  <rosparam file="$(find ur5_control)/config/ur5_control_pos.yaml" command="load"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
+output="screen" ns="/ur5" args="joint_state_controller
+					  shoulder_pan_joint_position_controller
+					  shoulder_lift_joint_position_controller
+					  elbow_joint_position_controller
+					  wrist_1_joint_position_controller
+					  wrist_2_joint_position_controller
+					  wrist_3_joint_position_controller"/>
+
+  <!-- Create node to control joint positions using joint controller -->
+  <node name="ur5_joint_positions_node" pkg="ur5_control" type="ur5_position_controller.py" output="screen" ns="/ur5" respawn="false" />
+  
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	respawn="false" output="screen">
+    <remap from="/joint_states" to="/ur5/joint_states" />
+  </node>
+
+</launch>

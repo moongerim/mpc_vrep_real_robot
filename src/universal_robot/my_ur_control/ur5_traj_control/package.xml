@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package>
+  <name>ur5_traj_control</name>
+  <version>0.0.0</version>
+  <description>UR5 control package</description>
+
+  <maintainer email="ashintemirov@nu.edu.kz">Almas Shintemirov</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://github.com/Kinovarobotics/kinova-ros</url>
+  <url type="repository">https://github.com/Kinovarobotics/kinova-ros</url>
+  <author email="davetcoleman@gmail.com">Dave Coleman</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>actionlib</build_depend>
+  <build_depend>control_msgs</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>ur_description</run_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>gazebo_ros_control</run_depend>
+  <run_depend>controller_manager</run_depend>
+  <run_depend>joint_state_controller</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>rqt_gui</run_depend>
+  <run_depend>effort_controllers</run_depend>
+  <run_depend>actionlib</run_depend>
+  <run_depend>control_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>trajectory_msgs</run_depend>
+ 
+  <export>
+  </export>
+
+</package>

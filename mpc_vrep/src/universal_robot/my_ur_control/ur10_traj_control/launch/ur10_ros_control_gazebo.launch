@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="limited" default="false"/>
+  <arg name="paused" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+	  <arg name="world_name" default="worlds/empty.world"/>
+	  <arg name="paused" value="$(arg paused)"/>
+	  <arg name="gui" value="$(arg gui)"/>
+	  <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+  </include>
+
+  <!-- robot model -->
+  <include file="$(find ur_description)/launch/ur10_upload.launch">
+    <arg name="limited" value="$(arg limited)"/>
+  </include>
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -z 0.1" respawn="false" output="screen" />
+
+
+
+  <!-- Load controller settings -->
+  <rosparam file="$(find ur10_traj_control)/config/ur10_controllers_gazebo.yaml" command="load"/>
+
+  <!-- spawn controller manager: pos/vel_based_pos_traj_controller-->
+  <node name="ros_control_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" args="joint_state_controller pos_based_pos_traj_controller" />  
+
+  <!-- load other controller --> 
+  <!--<node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+       output="screen" args="load pos_based_pos_traj_controller" /> -->
+
+  <!-- Create node to control joint positions using joint controller -->
+  <!--<node name="ur10_joint_traj_pos_node" pkg="ur_traj_control" type="test_move_gazebo.py" output="screen" respawn="false" />-->
+  
+  <!-- Convert joint states to /tf tranforms -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+</launch>

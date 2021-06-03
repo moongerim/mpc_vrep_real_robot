@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<launch>
+
+        <node name="serial_comm_node" pkg="serial_comm" type="serial_comm_node" />
+	<node name="controller_node" pkg="serial_comm" type="controller_node" />
+	
+	<param name="robot_description" command="cat $(find serial_comm)/arm.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+	
+<!--        <arg name="model" default="$(find serial_comm)/arm.urdf"/>
+	<arg name="rvizconfig" default="$(find serial_comm)/rviz/urdf.rviz" />
+-->
+	<node name="rviz" pkg="rviz" type="rviz" />
+
+</launch>

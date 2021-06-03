@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="model" default="$(find serial_comm)/urdf/box_ref.urdf"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+	<include file="$(find serial_comm)/launch/gazebo.launch">
+		<arg name="model" value="$(arg model)" />
+	</include>
+        
+        <node name="socket_client" pkg="serial_comm" type="socket_client.py" output="screen" required="true"/>
+        <node name="ref_move" pkg="serial_comm" type="ref_move.py"/> 
+
+</launch>

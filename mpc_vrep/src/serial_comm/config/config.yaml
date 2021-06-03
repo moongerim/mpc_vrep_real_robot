@@ -1,0 +1,3 @@
+/serial_comm/wrist_port : /dev/wrist_IMU
+/serial_comm/shoulder_port: /dev/shoulder_IMU
+/serial_comm/elbow_angle_port: /dev/elbow_angle

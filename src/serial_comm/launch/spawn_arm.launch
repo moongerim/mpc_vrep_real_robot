@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<node name="serial_comm_node" pkg="serial_comm" type="serial_comm_node" />
+<node name="controller_node" pkg="serial_comm" type="controller_node" />
+
+<rosparam command="load"
+            file="$(find serial_comm)/config/joints.yaml"
+            ns="arm_joint_state_controller" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/shoulder.yaml"
+            ns="shoulder_controller_y" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/shoulder_z.yaml"
+            ns="shoulder_controller_z" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/shoulder_x.yaml"
+            ns="shoulder_controller_x" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/elbow.yaml"
+            ns="elbow_controller" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/wrist_y.yaml"
+            ns="wrist_controller_y" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/wrist_x.yaml"
+            ns="wrist_controller_x" />
+<rosparam command="load"
+            file="$(find serial_comm)/config/wrist_z.yaml"
+            ns="wrist_controller_z" />
+
+<node name="arm_controller_spawner" pkg="controller_manager" type="spawner"
+    args="arm_joint_state_controller
+    		elbow_controller
+    		shoulder_controller_y
+    		shoulder_controller_x
+    		shoulder_controller_z
+    		wrist_controller_x
+    		wrist_controller_y
+    		wrist_controller_z"/>
+
+<arg name="model" default="$(find serial_comm)/urdf/arm.urdf.xacro"/>
+<arg name="rvizconfig" default="$(find serial_comm)/rviz/urdf.rviz" />
+
+<!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+-->
+<include file="$(find serial_comm)/launch/gazebo.launch">
+  <arg name="model" value="$(arg model)" />
+</include>
+
+</launch>

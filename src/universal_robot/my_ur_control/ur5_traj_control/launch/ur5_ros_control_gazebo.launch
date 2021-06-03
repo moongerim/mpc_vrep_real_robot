@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="limited" default="false"/>
+  <arg name="paused" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+	  <arg name="world_name" default="worlds/empty.world"/>
+	  <arg name="paused" value="$(arg paused)"/>
+	  <arg name="gui" value="$(arg gui)"/>
+	  <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+  </include>
+
+ 
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  
+  <node name="sdf_spawner" pkg="gazebo_ros" type="spawn_model" args="-file '/home/robot/model_editor_models/ref_box/model.sdf' -sdf -model ref_box -z 0.3 -y 0.4 -x -0.2 " respawn="false" output="screen" /> 
+
+
+  
+
+  <!-- load other controller --> 
+  <!--<node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+       output="screen" args="load pos_based_pos_traj_controller" /> -->
+
+  <!-- Create node to control joint positions using joint controller -->
+  <!--<node name="ur10_joint_traj_pos_node" pkg="ur_traj_control" type="test_move_gazebo.py" output="screen" respawn="false" />-->
+  
+  <!-- Convert joint states to /tf tranforms -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+</launch>
